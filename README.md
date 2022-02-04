@@ -12,7 +12,7 @@
 * [Contact](#contact)
 
 ## General info
-Do you have flexible timetable at work but you are tired of traffic always just after you leave it? Well, with this tool you can get informations when exactly travel time on your way home (or whatever road else) is in its peak.
+Do you have flexible working hours but you are tired of traffic always just after you finish? Well, with this tool you can get informations when exactly travel time on your way home (or whatever road else) is in its peak.
 
 The project uses Selenium to get lowest start-target commute time and saves averaged results in given interval in CSV file.
 
