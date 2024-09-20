@@ -16,4 +16,7 @@ traffictime.csv
 "traffictime_backup kopia.csv"
 traffictime_backup.csv
 _avast_
-results
+/results
+todo
+traffic_time_ikea_backup.csv
+traffic_time_ikea.csv

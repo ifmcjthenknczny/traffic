@@ -11,8 +11,10 @@ import time
 from datetime import datetime, timedelta
 from config import *
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
-from logo import LOGO
+from consts import LOGO, WEEKDAYS
 from helpers import *
 
 def start_later(time_string):
@@ -73,32 +75,30 @@ while True:
 
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument(
-        "--incognito --disable-extensions --disable-notifications --headless --disable-infobars --log-level=3")
+        "--incognito --disable-extensions --disable-notifications --disable-infobars --headless --log-level=3")
 
-    driver = webdriver.Chrome(
-        ChromeDriverManager().install(), options=chrome_options)
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=chrome_options)
     driver.get(GOOGLE_MAPS_URL)
 
-    consent_button = driver.find_element_by_xpath(
-        "/html/body/c-wiz/div/div/div/div[2]/div[1]/div[4]/form/div[1]/div/button")
+    consent_button = driver.find_elements(By.TAG_NAME,
+        "button")[2]
     consent_button.click()
     page_title = driver.title.split("–")[0]
 
-    weekdays = ["Monday", "Tuesday", "Wednesday",
-                "Thursday", "Friday", "Saturday", "Sunday"]
     results_list = []
 
     init_csv(CSV_NAME, CSV_BACKUP_NAME, page_title)
 
-    d_time_first_previos = datetime.now()
+    delta_time_first_previous = datetime.now()
     print("\nJust started at", datetime.now().strftime("%H:%M"),
           "! Interval of reporting:", INTERVAL_MINUTES, "minutes.")
 
     while True:
-        d_time = datetime.now()
-        time_now = d_time.strftime("%H:%M")
-        day_now = d_time.strftime("%Y-%m-%d")
-        weekday = weekdays[d_time.weekday()]
+        delta_time = datetime.now()
+        time_now = delta_time.strftime("%H:%M")
+        day_now = delta_time.strftime("%Y-%m-%d")
+        weekday = WEEKDAYS[delta_time.weekday()]
 
         if REPEAT:
             try:
@@ -108,14 +108,14 @@ while True:
             except:
                 pass
 
-        if is_time_to_update(d_time_first_previos, d_time, INTERVAL_MINUTES):
+        if is_time_to_update(delta_time_first_previous, delta_time, INTERVAL_MINUTES):
             update_csv_file(calculate_avg_result_row(results_list, weekday, day_now),
                            CSV_NAME, CSV_BACKUP_NAME)
-            d_time_first_previos = datetime.now()
+            delta_time_first_previous = datetime.now()
             results_list = []
 
         try:
-            elem = driver.find_element_by_xpath(
+            elem = driver.find_element(By.XPATH, 
                 '//*[@id="section-directions-trip-0"]/div/div[1]/div[1]/div[1]/span[1]').text
             traffic_time = split_time(elem)
         except:
