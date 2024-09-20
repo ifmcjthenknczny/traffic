@@ -1,5 +1,5 @@
 # Traffic Time - Google Maps Webscraper
-> Webscraping commuting time from Google Maps for further analysis.
+> Webscraping commuting time from Google Maps for further analysis, meant for local use, created back when I have not been a professional yet.
 
 ## Table of contents
 * [General info](#general-info)
@@ -32,7 +32,7 @@ This project uses following packages:
 * time
 * webdriver_manager.chrome
 
-Other requirements include installed Google Chrome and, of course, Python (3.7 or higher) environement along with all required packages.
+Other requirements include installed Google Chrome and, of course, Python (3.7 or higher) environement along with all required packages (requirements.txt is enclosed).
 The application is meant to be used with polish Google Maps, as well as decimal separator is comma, not dot.
 Paste your google maps link (with given road and mean of transport) in place and in quotation marks into options.py file, and set other options there. After that, you are ready to go!
 
