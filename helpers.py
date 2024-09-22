@@ -92,7 +92,7 @@ def print_starting_window():
 
 def init_driver():
     chrome_options = webdriver.ChromeOptions()
-    arguments = "--incognito --disable-extensions --disable-notifications --disable-infobars --log-level=3 --headless"
+    arguments = "--incognito --disable-extensions --disable-notifications --disable-infobars --headless --log-level=3"
     chrome_options.add_argument(arguments)
 
     service = Service(ChromeDriverManager().install())
