@@ -2,6 +2,11 @@ import csv
 import shutil
 from config import *
 from datetime import datetime
+from consts import LOGO, WEEKDAYS
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
 
 def update_csv_file(new_result, csv_filename, db_backup_name):
     with open(csv_filename, 'a', newline='\n') as csv_file:
@@ -57,7 +62,7 @@ def calculate_difference_seconds(now_time, planned_time):
     now_hour, now_minutes, now_seconds = now_time
     return 3600*(planned_hour - now_hour) + 60*(planned_minutes - now_minutes) + (planned_seconds - now_seconds)
 
-def split_time(time_element):
+def calculate_time_minutes(time_element):
     time_element = time_element.split()
     if len(time_element) == 2:
         if time_element[1] == "min":
@@ -68,3 +73,39 @@ def split_time(time_element):
         if time_element[1] == "godz.":
             traffic_time = int(time_element[0])*60 + int(time_element[2])
     return traffic_time
+
+def print_starting_window():
+    print(LOGO)
+
+    if REPEAT:
+        print("Time interval, repeat work mode")
+    else:
+        print("Continous work mode")
+
+    if FORCED_START_NOW == False:
+        print("Start time:", START_TIME)
+    elif FORCED_START_NOW == False and REPEAT == True:
+        print("Start time in second cycle:", START_TIME)
+    if REPEAT:
+        print("End time:", END_TIME)
+    print("\n")
+
+def init_driver():
+    chrome_options = webdriver.ChromeOptions()
+    arguments = "--incognito --disable-extensions --disable-notifications --disable-infobars --log-level=3 --headless"
+    chrome_options.add_argument(arguments)
+
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+    driver.get(GOOGLE_MAPS_URL)
+
+    consent_button = driver.find_elements(By.TAG_NAME,
+        "button")[2]
+    consent_button.click()
+    return driver
+
+def extract_datetime_data(datetime):
+    time_now = datetime.strftime("%H:%M")
+    day_now = datetime.strftime("%Y-%m-%d")
+    weekday = WEEKDAYS[datetime.weekday()]
+    return weekday, day_now, time_now
