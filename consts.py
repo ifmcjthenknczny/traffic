@@ -6,3 +6,5 @@ WEEKDAYS = ["Monday", "Tuesday", "Wednesday",
 X_PATHS = ['//*[@id="section-directions-trip-0"]/div[1]/div/div[1]/div[1]',
            '//*[@id="section-directions-trip-1"]/div[1]/div/div[1]/div[1]',
            '//*[@id="section-directions-trip-2"]/div[1]/div/div[1]/div[1]']
+
+RESULTS_DIRECTORY = "/results"

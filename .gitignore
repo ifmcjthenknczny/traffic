@@ -1,22 +1,6 @@
 __pycache__/
-db.csv
-djtiestotraffic.py
-rogalin.csv
-sth.csv
-traffic.csv
-traffic.py
-traffic_backup.csv
-traffic_beautifulsoup.py
-traffic_old.py
-traffic_options.py
-traffic_time_erli-backup.csv
-traffic_time_erli.csv
-traffictime (1).csv
-traffictime.csv
-"traffictime_backup kopia.csv"
-traffictime_backup.csv
 _avast_
 /results
 todo
-traffic_time_ikea_backup.csv
-traffic_time_ikea.csv
+*.csv
+/legacy

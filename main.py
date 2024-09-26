@@ -10,7 +10,7 @@ import time
 from datetime import datetime, timedelta
 from config import *
 from selenium.webdriver.common.by import By
-from consts import X_PATHS
+from consts import X_PATHS, RESULTS_DIRECTORY
 from helpers import update_csv_file, is_time_to_update, calculate_avg_result_row, init_csv, time_now_to_array, calculate_time_minutes, print_starting_window, init_driver, extract_datetime_data
 
 def start_later(time_string):
@@ -49,6 +49,7 @@ def start_later(time_string):
 CSV_BACKUP_NAME = CSV_NAME.replace('.csv', '_backup.csv')
 
 print_starting_window()
+driver = init_driver()
 
 while True:
     if FORCED_START_NOW == False:
@@ -56,7 +57,6 @@ while True:
 
     FORCED_START_NOW = False
 
-    driver = init_driver()
     page_title = driver.title.split("–")[0]
 
     results_list = []
