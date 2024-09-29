@@ -34,7 +34,7 @@ This project uses following packages:
 
 Other requirements include installed Google Chrome and, of course, Python (3.7 or higher) environement along with all required packages (requirements.txt is enclosed).
 The application is meant to be used with polish Google Maps, as well as decimal separator is comma, not dot.
-Paste your google maps link (with given road and mean of transport) in place and in quotation marks into options.py file, and set other options there. After that, you are ready to go!
+Rename config_template.py to config.py, paste your google maps link (with given road and mean of transport) in place and in quotation marks there, and set other options as well. After that, you are ready to go!
 
 ## Features
 * Tracks time of travel from point A to point B

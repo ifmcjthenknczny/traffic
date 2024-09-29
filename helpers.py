@@ -2,14 +2,15 @@ import csv
 import shutil
 from config import *
 from datetime import datetime
-from consts import LOGO, WEEKDAYS
+from consts import LOGO, WEEKDAYS, RESULTS_DIRECTORY
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
+import os
 
-def update_csv_file(new_result, csv_filename, db_backup_name):
-    with open(csv_filename, 'a', newline='\n') as csv_file:
+def update_csv_file(new_result, csv_path):
+    with open(csv_path, 'a', newline='\n') as csv_file:
         data_writer = csv.writer(csv_file, delimiter=";", quotechar='|')
         data_writer.writerow(new_result)
     if ENABLE_RAPORTING:
@@ -38,13 +39,18 @@ def calculate_avg_result_row(results_list, weekday, day_now):
 
     return [weekday, day_now, first_time, last_time, str(avg_traffic_time).replace(".", ",")]
 
+def find_file_path():
+    script_path = os.path.dirname(os.path.abspath(__file__))
+    results_path = script_path + '/' + RESULTS_DIRECTORY
+    file_path = results_path + '/' + CSV_NAME
+    return file_path
 
-def init_csv(csv_filename, csv_backup_filename, page_title):
-    try:
-        shutil.copyfile(csv_filename, csv_backup_filename)
-    except FileNotFoundError:
-        open(csv_filename, 'w', newline='\n')
-    with open(csv_filename, 'a', newline='\n') as csv_file:
+
+def init_csv(page_title):
+    results_path = os.path.join(os.getcwd(), RESULTS_DIRECTORY)
+    os.makedirs(os.path.dirname(results_path), exist_ok=True)
+    file_path = find_file_path()
+    with open(file_path, 'a', newline='\n') as csv_file:
         starter_writer = csv.writer(csv_file, delimiter=";", quotechar='|')
         starter_writer.writerow('')
         starter_writer.writerow([page_title])
@@ -55,7 +61,6 @@ def time_now_to_array(time_now):
     now_minutes = int(time_now.minute)
     now_seconds = int(time_now.second)
     return [now_hour, now_minutes, now_seconds]
-
 
 def calculate_difference_seconds(now_time, planned_time):
     planned_hour, planned_minutes, planned_seconds = planned_time
@@ -92,8 +97,7 @@ def print_starting_window():
 
 def init_driver():
     chrome_options = webdriver.ChromeOptions()
-    arguments = "--incognito --disable-extensions --disable-notifications --disable-infobars --headless --log-level=3"
-    chrome_options.add_argument(arguments)
+    chrome_options.add_argument("--incognito --disable-extensions --disable-notifications --disable-infobars --headless --log-level=3")
 
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=chrome_options)

@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 from config import *
 from selenium.webdriver.common.by import By
 from consts import X_PATHS, RESULTS_DIRECTORY
-from helpers import update_csv_file, is_time_to_update, calculate_avg_result_row, init_csv, time_now_to_array, calculate_time_minutes, print_starting_window, init_driver, extract_datetime_data
+from helpers import update_csv_file, is_time_to_update, calculate_avg_result_row, init_csv, time_now_to_array, calculate_time_minutes, print_starting_window, init_driver, extract_datetime_data, find_file_path
 
 def start_later(time_string):
     time_now = datetime.now()
@@ -46,8 +46,6 @@ def start_later(time_string):
 
     time.sleep(time_to_wait)
 
-CSV_BACKUP_NAME = CSV_NAME.replace('.csv', '_backup.csv')
-
 print_starting_window()
 driver = init_driver()
 
@@ -60,7 +58,8 @@ while True:
     page_title = driver.title.split("–")[0]
 
     results_list = []
-    init_csv(CSV_NAME, CSV_BACKUP_NAME, page_title)
+    init_csv(page_title)
+    csv_path = find_file_path()
 
     datetime_previous = datetime.now()
     print("\nJust started at", datetime.now().strftime("%H:%M"),
@@ -81,7 +80,7 @@ while True:
         if is_time_to_update(datetime_previous, datetime_now, INTERVAL_MINUTES):
             avg_result_row = calculate_avg_result_row(results_list, weekday, day_now)
             update_csv_file(avg_result_row,
-                            CSV_NAME, CSV_BACKUP_NAME)
+                            csv_path)
             datetime_previous = datetime.now()
             results_list = []
 

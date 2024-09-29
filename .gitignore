@@ -4,3 +4,4 @@ _avast_
 todo
 *.csv
 /legacy
+config.py
