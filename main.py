@@ -11,7 +11,20 @@ from datetime import datetime, timedelta
 from config import config
 from selenium.webdriver.common.by import By
 from consts import X_PATHS
-from helpers import create_csv_path, update_csv_file, is_time_to_update, calculate_avg_result_row, init_csv, time_now_to_array, calculate_time_minutes, print_starting_window, init_driver, extract_datetime_data, find_file_path
+from helpers import (
+    create_csv_path,
+    update_csv_file,
+    is_time_to_update,
+    calculate_avg_result_row,
+    init_csv,
+    time_now_to_array,
+    calculate_time_minutes,
+    print_starting_window,
+    init_driver,
+    extract_datetime_data,
+    find_file_path,
+)
+
 
 def start_later(time_string):
     time_now = datetime.now()
@@ -31,8 +44,11 @@ def start_later(time_string):
 
     planned_time = [planned_hour, planned_minutes, planned_seconds]
 
-    time_to_wait = 3600*(planned_hour - now_hour) + 60 * \
-        (planned_minutes - now_minutes) + (planned_seconds - now_seconds)
+    time_to_wait = (
+        3600 * (planned_hour - now_hour)
+        + 60 * (planned_minutes - now_minutes)
+        + (planned_seconds - now_seconds)
+    )
     hours_string = timedelta(seconds=time_to_wait)
 
     print("\nWaiting", hours_string, "Starting script at", time_string)
@@ -45,6 +61,7 @@ def start_later(time_string):
             print("Still here! ", hours_string, "left to start!")
 
     time.sleep(time_to_wait)
+
 
 print_starting_window()
 driver = init_driver()
@@ -64,8 +81,13 @@ while True:
     init_csv(page_title)
 
     datetime_previous = datetime.now()
-    print("\nJust started at", datetime.now().strftime("%H:%M"),
-          "! Interval of reporting:", config.INTERVAL_MINUTES, "minutes.")
+    print(
+        "\nJust started at",
+        datetime.now().strftime("%H:%M"),
+        "! Interval of reporting:",
+        config.INTERVAL_MINUTES,
+        "minutes.",
+    )
 
     while True:
         datetime_now = datetime.now()
@@ -73,7 +95,7 @@ while True:
 
         if config.REPEAT:
             try:
-                if config.END_TIME.split(':') == time_now.split(':'):
+                if config.END_TIME.split(":") == time_now.split(":"):
                     print("Webscraping reached endtime.")
                     break
             except:
@@ -81,8 +103,7 @@ while True:
 
         if is_time_to_update(datetime_previous, datetime_now, config.INTERVAL_MINUTES):
             avg_result_row = calculate_avg_result_row(results_list, weekday, day_now)
-            update_csv_file(avg_result_row,
-                            csv_path)
+            update_csv_file(avg_result_row, csv_path)
             datetime_previous = datetime.now()
             results_list = []
 
