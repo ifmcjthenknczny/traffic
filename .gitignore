@@ -4,4 +4,7 @@ _avast_
 todo
 *.csv
 /legacy
-config.py
+.env
+.serena/
+.venv/
+*.egg-info

@@ -3,8 +3,9 @@ LOGO = "\n\n_/_/_/_/_/  _/_/_/      _/_/    _/_/_/_/  _/_/_/_/  _/_/_/    _/_/_/
 WEEKDAYS = ["Monday", "Tuesday", "Wednesday",
                 "Thursday", "Friday", "Saturday", "Sunday"]
 
-X_PATHS = ['//*[@id="section-directions-trip-0"]/div[1]/div/div[1]/div[1]',
-           '//*[@id="section-directions-trip-1"]/div[1]/div/div[1]/div[1]',
-           '//*[@id="section-directions-trip-2"]/div[1]/div/div[1]/div[1]']
+# X-paths directly to the time elements (3 road options)
+X_PATHS = ['/html/body/div[1]/div[2]/div[9]/div[9]/div/div/div[1]/div[2]/div/div[1]/div/div/div[5]/div[1]/div[1]/div/div[1]/div[1]',
+           '/html/body/div[1]/div[2]/div[9]/div[9]/div/div/div[1]/div[2]/div/div[1]/div/div/div[5]/div[2]/div[1]/div/div[1]/div[1]',
+           '/html/body/div[1]/div[2]/div[9]/div[9]/div/div/div[1]/div[2]/div/div[1]/div/div/div[5]/div[3]/div[1]/div/div[1]/div[1]']
 
 RESULTS_DIRECTORY = "results"

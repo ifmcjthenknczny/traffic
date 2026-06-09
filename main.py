@@ -8,10 +8,10 @@ Created on Wed Aug 11 14:57:23 2021
 
 import time
 from datetime import datetime, timedelta
-from config import *
+from config import config
 from selenium.webdriver.common.by import By
-from consts import X_PATHS, RESULTS_DIRECTORY
-from helpers import update_csv_file, is_time_to_update, calculate_avg_result_row, init_csv, time_now_to_array, calculate_time_minutes, print_starting_window, init_driver, extract_datetime_data, find_file_path
+from consts import X_PATHS
+from helpers import create_csv_path, update_csv_file, is_time_to_update, calculate_avg_result_row, init_csv, time_now_to_array, calculate_time_minutes, print_starting_window, init_driver, extract_datetime_data, find_file_path
 
 def start_later(time_string):
     time_now = datetime.now()
@@ -37,7 +37,7 @@ def start_later(time_string):
 
     print("\nWaiting", hours_string, "Starting script at", time_string)
 
-    if MAKE_SURE_IT_IS_WAITING:
+    if config.MAKE_SURE_IT_IS_WAITING:
         while time_to_wait > 600:
             time.sleep(600)
             time_to_wait = time_to_wait - 600
@@ -50,34 +50,36 @@ print_starting_window()
 driver = init_driver()
 
 while True:
-    if FORCED_START_NOW == False:
-        start_later(START_TIME)
+    if config.FORCED_START_NOW == False:
+        start_later(config.START_TIME)
 
-    FORCED_START_NOW = False
+    config.FORCED_START_NOW = False
 
     page_title = driver.title.split("–")[0]
 
     results_list = []
-    init_csv(page_title)
+
     csv_path = find_file_path()
+    create_csv_path(csv_path)
+    init_csv(page_title)
 
     datetime_previous = datetime.now()
     print("\nJust started at", datetime.now().strftime("%H:%M"),
-          "! Interval of reporting:", INTERVAL_MINUTES, "minutes.")
+          "! Interval of reporting:", config.INTERVAL_MINUTES, "minutes.")
 
     while True:
         datetime_now = datetime.now()
         weekday, day_now, time_now = extract_datetime_data(datetime_now)
 
-        if REPEAT:
+        if config.REPEAT:
             try:
-                if END_TIME.split(':') == time_now.split(':'):
+                if config.END_TIME.split(':') == time_now.split(':'):
                     print("Webscraping reached endtime.")
                     break
             except:
                 pass
 
-        if is_time_to_update(datetime_previous, datetime_now, INTERVAL_MINUTES):
+        if is_time_to_update(datetime_previous, datetime_now, config.INTERVAL_MINUTES):
             avg_result_row = calculate_avg_result_row(results_list, weekday, day_now)
             update_csv_file(avg_result_row,
                             csv_path)
@@ -94,8 +96,8 @@ while True:
         result = [weekday, day_now, time_now, str(traffic_time)]
         results_list += [result]
 
-        time.sleep(SLEEP_TIME)
+        time.sleep(config.SLEEP_TIME)
         driver.refresh()
 
-    if REPEAT == False:
+    if config.REPEAT == False:
         break

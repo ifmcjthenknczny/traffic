@@ -1,6 +1,4 @@
 import csv
-import shutil
-from config import *
 from datetime import datetime
 from consts import LOGO, WEEKDAYS, RESULTS_DIRECTORY
 from selenium import webdriver
@@ -8,15 +6,22 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 import os
+from config import config
+
+# TODO: remove config from helpers
 
 def update_csv_file(new_result, csv_path):
     with open(csv_path, 'a', newline='\n') as csv_file:
         data_writer = csv.writer(csv_file, delimiter=";", quotechar='|')
         data_writer.writerow(new_result)
-    if ENABLE_RAPORTING:
+    if config.ENABLE_RAPORTING:
         print(new_result[-3], "-", new_result[-2], ":",
               round(float(new_result[-1].replace(',', '.')), 1), " min")
 
+def create_csv_path(csv_path):
+    if not os.path.exists(csv_path):
+        os.makedirs(os.path.dirname(csv_path), exist_ok=True)
+        open(csv_path, 'w').close()
 
 def is_time_to_update(time_first, time_now, interval):
     minutes_now = time_now.minute
@@ -42,7 +47,7 @@ def calculate_avg_result_row(results_list, weekday, day_now):
 def find_file_path():
     script_path = os.path.dirname(os.path.abspath(__file__))
     results_path = script_path + '/' + RESULTS_DIRECTORY
-    file_path = results_path + '/' + CSV_NAME
+    file_path = results_path + '/' + config.CSV_NAME
     return file_path
 
 
@@ -82,17 +87,17 @@ def calculate_time_minutes(time_element):
 def print_starting_window():
     print(LOGO)
 
-    if REPEAT:
+    if config.REPEAT:
         print("Time interval, repeat work mode")
     else:
         print("Continous work mode")
 
-    if FORCED_START_NOW == False:
-        print("Start time:", START_TIME)
-    elif FORCED_START_NOW == False and REPEAT == True:
-        print("Start time in second cycle:", START_TIME)
-    if REPEAT:
-        print("End time:", END_TIME)
+    if config.FORCED_START_NOW == False:
+        print("Start time:", config.START_TIME)
+    elif config.FORCED_START_NOW == False and config.REPEAT == True:
+        print("Start time in second cycle:", config.START_TIME)
+    if config.REPEAT:
+        print("End time:", config.END_TIME)
     print("\n")
 
 def init_driver():
@@ -101,7 +106,7 @@ def init_driver():
 
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=chrome_options)
-    driver.get(GOOGLE_MAPS_URL)
+    driver.get(config.GOOGLE_MAPS_URL)
 
     consent_button = driver.find_elements(By.TAG_NAME,
         "button")[2]
